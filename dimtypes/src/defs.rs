@@ -1,6 +1,12 @@
 pub mod dimens {
+	//! Type aliases for the [Quantity] variants corresponding to named physical properties
+
 	use crate::Quantity;
+
+	/// Unitless quantity  
+	/// Unitless quantities have the special ability to convert directly to/from [f64] ([Unitless] implements [`From<f64>`] and [f64] implements [`From<Unitless>`])
 	pub type Unitless =		Quantity<0,0,0,0,0>;
+
 	pub type Time =			Quantity<1,0,0,0,0>;
 	pub type Length =		Quantity<0,1,0,0,0>;
 	pub type Area =			Quantity<0,2,0,0,0>;
@@ -26,6 +32,8 @@ pub mod dimens {
 }
 
 pub mod consts {
+	//! Const, unit-aware definitions for selected physical constants
+
 	use crate::Quantity;
 	use crate::units::*;
 	use crate::dimens::*;
@@ -46,7 +54,10 @@ pub mod consts {
 }
 
 pub mod units {
-	use crate::{LogUnit,OffsetSystem};
+	//! Const definitions for many common units  
+	//! SI prefixes are implmented as unitless scaling factors and so can be applied to any linear unit through multiplication (e.g. `KILO*GRAM`, `MICRO*FARAD`)
+
+	use crate::{LogUnit,OffsetUnit};
 	use crate::consts;
 	use crate::dimens::*;
 
@@ -154,16 +165,19 @@ pub mod units {
 
 	// Offset and Log systems
 
-	pub const fn gauge_pressure_in(unit: Pressure) -> OffsetSystem<Pressure> {
-		OffsetSystem::new(unit,consts::STANDARD_ATMOSPHERE)
+	/// Creates an [OffsetUnit] corresponding to gauge pressures in the given pressure `unit` relative to a [standard atmosphere][consts::STANDARD_ATMOSPHERE]
+	pub const fn gauge_pressure_in(unit: Pressure) -> OffsetUnit<Pressure> {
+		OffsetUnit::new(unit,consts::STANDARD_ATMOSPHERE)
 	}
 
-	pub const CELSIUS: OffsetSystem<Temperature> = OffsetSystem::new(KELVIN,273.15*KELVIN);
-	pub const FAHRENHEIT: OffsetSystem<Temperature> = OffsetSystem::new(RANKINE,CELSIUS.zero_qty()-32.0*RANKINE);
+	pub const CELSIUS: OffsetUnit<Temperature> = OffsetUnit::new(KELVIN,273.15*KELVIN);
+	pub const FAHRENHEIT: OffsetUnit<Temperature> = OffsetUnit::new(RANKINE,CELSIUS.zero_qty()-32.0*RANKINE);
 	
+	/// Creates a [LogUnit] of decibels relative to the `reference` value using the power convention of 10 dB/decade.
 	pub const fn power_decibels_vs<Dimen: Copy>(reference: Dimen) -> LogUnit<Dimen> {
 		LogUnit::base10(10.0, reference)
 	}
+	/// Creates a [LogUnit] of decibels relative to the `reference` value using the amplitude convention of 20 dB/decade.
 	pub const fn amplitude_decibels_vs<Dimen: Copy>(reference: Dimen) -> LogUnit<Dimen> {
 		LogUnit::base10(20.0, reference)
 	}

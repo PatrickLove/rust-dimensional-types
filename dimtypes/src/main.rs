@@ -3,7 +3,7 @@ use dimtypes::units::*;
 use dimtypes::dimens::*;
 
 fn total_energy(speed: Velocity, mass: Mass, height: Length) -> Energy {
-    0.5*mass*speed.pow::<2>() + mass*dimtypes::consts::STANDARD_GRAVITY*height
+    0.5*mass*speed.pow::<2>() + mass*consts::STANDARD_GRAVITY*height
 }
 
 fn main() {
@@ -22,6 +22,6 @@ fn main() {
     println!("{:.3} deg C",(212.0*FAHRENHEIT-32.0*FAHRENHEIT).as_unit(CELSIUS.as_rel_unit()));
     println!("{:.3} deg F",(0.0*CELSIUS + FAHRENHEIT.rel_qty_of(27.0)).as_unit(FAHRENHEIT));
     println!("{:.3} dBV",(30.0*MILLI*AMPERE * 100.0*OHM).as_unit(amplitude_decibels_vs(1.0*VOLT)));
-    println!("{:.3} psia",(15.7*gauge_pressure_in(KILO*PASCAL)).as_unit(PSI))
+    println!("{:.3} psia",(15.7*gauge_pressure_in(KILO*PASCAL)).as_unit(PSI));
 }
 

@@ -12,7 +12,7 @@ Internally, `Quantity` wraps a single `f64` value representing the physical quan
 
 The value of a `Quantity` can be extracted in any compatible unit using the `as_unit()` function.  A "compatible unit" is an implementor of the `dimtypes::Unit` trait with the internal `Dimen` type the same as the `Quantity` being converted.  Generally this is simply another `Quantity` of the same dimension where the conversion is found by division, however other implementations can be used for unit systems which are nonlinear (notably Celsius, Fahrenheit, Decibels, etc.).  This package provides `OffsetUnit` and `LogUnit` types for some of these cases.
 
-The `dimtypes::units` module provides constant definitions for many common units.  SI prefixes are implmented as unitless scaling factors and so can be applied to any linear unit through multiplication (e.g. `KILO*GRAM`, `MICRO*FARAD`).  `dimtypes::consts` also provides united versions of selected physical constants.
+The `dimtypes::units` module provides constant definitions for many common units.  SI prefixes are implmented as unitless scaling factors and so can be applied to any linear unit through multiplication (e.g. `KILO*GRAM`, `MICRO*FARAD`).  `dimtypes::consts` also provides unit-aware versions of selected physical constants.
 
 Some examples (assuming `use dimtypes::units::*`, `use dimtypes::dimens::*`, and `use dimtypes::consts`)
 
@@ -49,7 +49,7 @@ println!("{:.3}",(190.0*POUND_MASS).as_unit(KILO*GRAM));
 ```rust
 // Let's find the total kinetic and potential energy of an object
 fn total_energy(speed: Velocity, mass: Mass, height: Length) -> Energy {
-	0.5*mass*speed + mass*dimtypes::consts::STANDARD_GRAVITY*height
+	0.5*mass*speed + mass*consts::STANDARD_GRAVITY*height
 }
 // Oops, we forgot to square the speed.  Luckily the compiler is watching out for us!  It complains both about adding incompatible units and not matching the return type.
 /*
@@ -77,7 +77,7 @@ error[E0308]: mismatched types
 
 // Lets fix it with pow just to demonstrate it
 fn total_energy(speed: Velocity, mass: Mass, height: Length) -> Energy {
-    0.5*mass*speed.pow::<2>() + mass*dimtypes::consts::STANDARD_GRAVITY*height
+    0.5*mass*speed.pow::<2>() + mass*consts::STANDARD_GRAVITY*height
 }
 (...)
 let result = total_energy(10.0*MILE/HOUR,2500.0*KILO*GRAM,1.0*FURLONG);
