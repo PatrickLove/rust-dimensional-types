@@ -24,9 +24,10 @@ println!("{:.3}",total_length.as_unit(YARD));
 ```
 
 ```rust
-// How much does that 190lb man weight in metric...
+// How much does that 190lb man weigh in metric...
 println!("{:.3}",(190.0*POUND_FORCE).as_unit(KILO*GRAM));
-// Fails to compile!  Kilograms measure mass (Quantity<0,0,1,0,0>), but we provided a weight (Force; Quantity<-2, 1, 1, 0, 0>)
+// Fails to compile!  Kilograms measure mass (Quantity<0,0,1,0,0>), but we provided
+// a weight (Force; Quantity<-2, 1, 1, 0, 0>)
 /*
 error[E0271]: type mismatch resolving `<Quantity<0, 0, 1, 0, 0> as Unit>::Dimen == Quantity<-2, 1, 1, 0, 0>`
   --> src\main.rs:21:50
@@ -40,7 +41,8 @@ error[E0271]: type mismatch resolving `<Quantity<0, 0, 1, 0, 0> as Unit>::Dimen 
               found struct `Quantity<0, 0, _, _, _>`
 */
 
-//Fixed using correct unit of pound-mass (could also convert to KILO*GRAM*consts::STANDARD_GRAVITY, which would be kilogram-force)
+//Fixed using correct unit of pound-mass
+//(could also convert to KILO*GRAM*consts::STANDARD_GRAVITY, which would be kilogram-force)
 println!("{:.3}",(190.0*POUND_MASS).as_unit(KILO*GRAM));
 // 86.183
 
@@ -51,7 +53,8 @@ println!("{:.3}",(190.0*POUND_MASS).as_unit(KILO*GRAM));
 fn total_energy(speed: Velocity, mass: Mass, height: Length) -> Energy {
 	0.5*mass*speed + mass*consts::STANDARD_GRAVITY*height
 }
-// Oops, we forgot to square the speed.  Luckily the compiler is watching out for us!  It complains both about adding incompatible units and not matching the return type.
+// Oops, we forgot to square the speed.  Luckily the compiler is watching out for us! 
+// It complains both about adding incompatible units and not matching the return type.
 /*
 error[E0308]: mismatched types
   --> src\main.rs:12:22
@@ -81,7 +84,7 @@ fn total_energy(speed: Velocity, mass: Mass, height: Length) -> Energy {
 }
 (...)
 let result = total_energy(10.0*MILE/HOUR,2500.0*KILO*GRAM,1.0*FURLONG);
-println!("{:e}",result); // Quantities format themselves with their SI base units
+println!("{:.6e}",result); // Quantities format themselves with their SI base units
 // 4.956941e6 kg m^2 s^-2
 println!("{:.4} kWh",result.as_unit(KILO*WATT*HOUR)); // Or we can convert to other units
 // 1.3769 kWh
